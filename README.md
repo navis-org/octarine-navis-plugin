@@ -40,3 +40,4 @@ v.clear()
 v.add_neurons(n, color_by='strahler_index', palette='viridis')
 ```
 
+![example](_static/example_screenshot.png)
