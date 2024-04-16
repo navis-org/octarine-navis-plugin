@@ -29,6 +29,7 @@ def register_plugin():
     oc.Viewer.add_neuron = add_neurons
 
 
+@oc.viewer.update_legend
 def add_neurons(
     self,
     x,
