@@ -248,7 +248,7 @@ def connectors2gfx(neuron, neuron_color, object_id, **kwargs):
         # Add custom attributes
         con._object_type = "neuron"
         con._neuron_part = "connectors"
-        con._id = neuron.id
+        con._neuron_id = neuron.id
         con._name = str(getattr(neuron, "name", neuron.id))
         con._object_id = object_id
         con._object = neuron
@@ -268,7 +268,7 @@ def mesh2gfx(neuron, neuron_color, object_id, **kwargs):
     # Add custom attributes
     m._object_type = "neuron"
     m._neuron_part = "neurites"
-    m._id = neuron.id
+    m._neuron_id = neuron.id
     m._name = str(getattr(neuron, "name", neuron.id))
     m._object_id = object_id
     m._object = neuron
@@ -287,7 +287,7 @@ def voxel2gfx(neuron, neuron_color, object_id, **kwargs):
     # Add custom attributes
     vol._object_type = "neuron"
     vol._neuron_part = "neurites"
-    vol._id = neuron.id
+    vol._neuron_id = neuron.id
     vol._name = str(getattr(neuron, "name", neuron.id))
     vol._object_id = object_id
     vol._object = neuron
@@ -338,7 +338,7 @@ def skeleton2gfx(neuron, neuron_color, object_id, **kwargs):
         # Add custom attributes
         line._object_type = "neuron"
         line._neuron_part = "neurites"
-        line._id = neuron.id
+        line._neuron_id = neuron.id
         line._name = str(getattr(neuron, "name", neuron.id))
         line._object = neuron
         line._object_id = object_id
@@ -390,7 +390,7 @@ def skeleton2gfx(neuron, neuron_color, object_id, **kwargs):
                     # Add custom attributes
                     s._object_type = "neuron"
                     s._neuron_part = "soma"
-                    s._id = neuron.id
+                    s._neuron_id = neuron.id
                     s._name = str(getattr(neuron, "name", neuron.id))
                     s._object = neuron
                     s._object_id = object_id
