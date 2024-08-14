@@ -87,7 +87,7 @@ def add_neurons(
         self.clear()
 
     for v in vis:
-        self.scene.add(v)
+        self._add_to_scene(v, center=False)
 
     if center:
         self.center_camera()
