@@ -12,6 +12,8 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 
+import warnings
+
 import octarine as oc
 
 from .objects import neuron2gfx, skeletor2gfx
@@ -47,24 +49,42 @@ def add_neurons(
     radius=False,
     center=True,
     clear=False,
+    random_ids=False
 ):
     """Add NAVis neuron(s) to the viewer.
 
     Parameters
     ----------
-    x :         navis Neuron | NeuronList
-                The neuron(s) to add to the viewer.
-    color :     single color | list thereof, optional
-                Color(s) for the neurons.
-    connectors : bool, optional
-                Whether to plot connectors.
-    cn_colors : dict, optional
-                A dictionary mapping connectors to colors.
-    radius :    float, optional
-                The radius of the skeleton.
+    x :             navis Neuron | NeuronList
+                    The neuron(s) to add to the viewer.
+    color :         single color | list thereof, optional
+                    Color(s) for the neurons.
+    connectors :    bool, optional
+                    Whether to plot connectors.
+    cn_colors :     dict, optional
+                    A dictionary mapping connectors to colors.
+    radius :        float, optional
+                    Whether to use the skeleton's radius information
+                    to plot the neuron as a tube (mesh).
+    random_ids :    bool
+                    Whether to use random UUIDs instead of neuron IDs.
+                    This is useful if the neurons you are adding have
+                    duplicate IDS.
 
     """
-    if not is_neuron(x) and not is_neuronlist(x):
+    import navis
+    import skeletor as sk
+
+    # Add a shortcut for skeletor skeletons
+    if isinstance(x, sk.Skeleton):
+        x = navis.TreeNeuron(x)
+
+    if is_neuron(x):
+        pass
+    elif is_neuronlist(x):
+        if x.is_degenerated:
+            warnings.warn("NeuronList contains duplicate IDs.")
+    else:
         raise ValueError(f"Input must be a navis Neuron/List, got {type(x)}.")
 
     vis = neuron2gfx(
@@ -81,6 +101,7 @@ def add_neurons(
         linewidth=linewidth,
         synapse_layout=synapse_layout,
         radius=radius,
+        random_ids=random_ids
     )
 
     if clear:

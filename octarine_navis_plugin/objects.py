@@ -40,7 +40,7 @@ def volume2gfx(x, **kwargs):
     return vis
 
 
-def neuron2gfx(x, color=None, **kwargs):
+def neuron2gfx(x, color=None, random_ids=False, **kwargs):
     """Convert a Neuron/List to pygfx visuals.
 
     Parameters
@@ -49,39 +49,22 @@ def neuron2gfx(x, color=None, **kwargs):
                       Neuron(s) to plot.
     color :           list | tuple | array | str
                       Color to use for plotting.
-    colormap :        tuple | dict | array
-                      Color to use for plotting. Dictionaries should be mapped
-                      by ID. Overrides ``color``.
-    connectors :      bool, optional
-                      If True, plot connectors.
-    connectors_only : bool, optional
-                      If True, only connectors are plotted.
-    by_strahler :     bool, optional
-                      If True, shade neurites by strahler order.
-    by_confidence :   bool, optional
-                      If True, shade neurites by confidence.
-    linewidth :       int, optional
-                      Set linewidth. Might not work depending on your backend.
-    cn_mesh_colors :  bool, optional
-                      If True, connectors will have same color as the neuron.
-    synapse_layout :  dict, optional
-                      Sets synapse layout. For example::
+    **kwargs
+                      Additional arguments to pass to the plotting functions:
+                        - alpha: float
+                        - connectors: bool
+                        - connectors_only: bool
+                        - cn_colors: dict
+                        - color_by: str
+                        - shade_by: str
+                        - palette: str
+                        - vmin: float
+                        - vmax: float
+                        - linewidth: float
+                        - synapse_layout: dict
+                        - radius: bool
+                        - center: bool
 
-                        {
-                            0: {
-                                'name': 'Presynapses',
-                                'color': (255, 0, 0)
-                                },
-                            1: {
-                                'name': 'Postsynapses',
-                                'color': (0, 0, 255)
-                                },
-                            2: {
-                                'name': 'Gap junctions',
-                                'color': (0, 255, 0)
-                                },
-                            'display': 'lines'  # can also be 'circles'
-                        }
 
     Returns
     -------
@@ -160,7 +143,10 @@ def neuron2gfx(x, color=None, **kwargs):
     visuals = []
     for i, neuron in enumerate(x):
         # Generate random ID -> we need this in case we have duplicate IDs
-        object_id = uuid.uuid4()
+        if random_ids:
+            object_id = uuid.uuid4()
+        else:
+            object_id = neuron.id  # this may also be a random ID
 
         if kwargs.get("radius", False):
             # Convert and carry connectors with us
