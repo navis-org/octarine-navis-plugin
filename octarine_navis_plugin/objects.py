@@ -128,7 +128,6 @@ def neuron2gfx(x, color=None, **kwargs):
             neurons=x,
             palette=palette,
             alpha=kwargs.get("alpha", None),
-            clusters=kwargs.get("clusters", None),
             color_range=1,
         )
 
@@ -312,17 +311,13 @@ def skeleton2gfx(neuron, neuron_color, object_id, **kwargs):
 
         # Generate coordinates, breaks in segments are indicated by NaNs
         if neuron_color.ndim == 1:
-            coords = navis.plotting.plot_utils.segments_to_coords(
-                neuron, neuron.segments
-            )
+            coords = navis.plotting.plot_utils.segments_to_coords(neuron)
         else:
-            coords, vertex_colors = navis.plotting.plot_utils.segments_to_coords(
-                neuron, neuron.segments, node_colors=neuron_color
-            )
+            coords, neuron_color = navis.plotting.plot_utils.segments_to_coords(neuron, node_colors=neuron_color)
             # `neuron_color` is now a list of colors for each segment; we have to flatten it
             # and add `None` to match the breaks
-            vertex_colors = np.vstack(
-                [np.append(t, [[None] * t.shape[1]], axis=0) for t in vertex_colors]
+            neuron_color = np.vstack(
+                [np.append(t, [[None] * t.shape[1]], axis=0) for t in neuron_color]
             ).astype(np.float32, copy=False)
 
         coords = np.vstack([np.append(t, [[None] * 3], axis=0) for t in coords])
