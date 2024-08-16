@@ -61,9 +61,12 @@ def neuron2gfx(x, color=None, random_ids=False, **kwargs):
                         - vmin: float
                         - vmax: float
                         - linewidth: float
-                        - synapse_layout: dict
+                        - cn_layout: dict
                         - radius: bool
                         - center: bool
+                        - soma: bool
+                        - random_ids: bool
+
 
 
     Returns
@@ -181,7 +184,7 @@ def connectors2gfx(neuron, neuron_color, object_id, **kwargs):
     import navis
 
     cn_lay = navis.config.default_connector_colors.copy()
-    cn_lay.update(kwargs.get("synapse_layout", {}))
+    cn_lay.update(kwargs.get("cn_layout", {}))
 
     visuals = []
     cn_colors = kwargs.get("cn_colors", None)

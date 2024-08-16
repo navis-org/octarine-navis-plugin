@@ -36,20 +36,23 @@ def add_neurons(
     self,
     x,
     color=None,
-    alpha=1,
-    connectors=False,
-    cn_colors=None,
+    alpha=None,
     color_by=None,
     shade_by=None,
     palette=None,
     vmin=None,
     vmax=None,
+    connectors=False,
+    cn_colors=None,
+    cn_layout=None,
+    random_ids=False,
     linewidth=1,
-    synapse_layout=None,
     radius=False,
+    soma=True,
+    dps_scale_vec='auto',
+    name=None,
     center=True,
-    clear=False,
-    random_ids=False
+    clear=False
 ):
     """Add NAVis neuron(s) to the viewer.
 
@@ -59,17 +62,56 @@ def add_neurons(
                     The neuron(s) to add to the viewer.
     color :         single color | list thereof, optional
                     Color(s) for the neurons.
+    alpha :         float, optional
+                    Transparency of the neurons. If provided, will
+                    override the alpha value of the color.
+    color_by :      str, optional
+                    Name of a property to use for coloring the neurons.
+                    Overwrites the `color` parameter.
+                    Use these parameters to adjust the color palette:
+                     - palette (str): Name of a color palette to use.
+                     - vmin/vmax (float): Min and max values for the scale.
+    shade_by :      str, optional
+                    Name of a property to use for shading the neurons.
     connectors :    bool, optional
-                    Whether to plot connectors.
-    cn_colors :     dict, optional
-                    A dictionary mapping connectors to colors.
-    radius :        float, optional
-                    Whether to use the skeleton's radius information
-                    to plot the neuron as a tube (mesh).
+                    Whether to plot connectors. Use these parameters
+                    to adjust the way connectors are plotted:
+                     - `cn_colors` (dict): A dictionary mapping connector
+                       types to colors. E.g. {'pre': 'red', 'post': 'blue'}.
+                     - `cn_layout` (str): Layout of the connectors. See
+                       `navis.config.default_connector_colors` for options.
     random_ids :    bool
                     Whether to use random UUIDs instead of neuron IDs.
                     This is useful if the neurons you are adding have
-                    duplicate IDS.
+                    duplicate IDs.
+
+    For skeletons only
+
+    linewidth :     float, optional
+                    Width of the lines.
+    radius :        float, optional
+                    For skeletons only: whether to use the skeleton's radius
+                    information to plot the neuron as a tube (mesh).
+    soma :          bool, optional
+                    Whether to plot the soma (if present) as a sphere.
+
+    For dotprops only
+
+    dps_scale_vec : float | "auto"
+                    Scale factor for the individual tangent vectors.
+                    If "auto" (default), the scale factor is determined
+                    automatically.
+
+    General viewer parameters
+
+    name :          str, optional
+                    If provided, the neuron(s) will be added to the viewer
+                    with this name. Overwrites the neurons' IDs.
+    center :        bool, optional
+                    Whether to re-center the camera after adding the neuron(s).
+    clear :         bool, optional
+                    Whether to clear the scene before adding the neuron(s).
+
 
     """
     import navis
@@ -99,15 +141,20 @@ def add_neurons(
         vmin=vmin,
         vmax=vmax,
         linewidth=linewidth,
-        synapse_layout=synapse_layout,
+        cn_layout=cn_layout,
         radius=radius,
-        random_ids=random_ids
+        random_ids=random_ids,
+        dps_scale_vec=dps_scale_vec,
+        soma=soma
     )
 
     if clear:
         self.clear()
 
     for v in vis:
+        if name:
+            v._object_id = name
+
         self._add_to_scene(v, center=False)
 
     if center:
