@@ -9,17 +9,16 @@ volumes, etc.
 pip install octarine-navis-plugin -U
 ```
 
-Note that you will have to install `Octarine` and `NAVis` separately.
-This is intentional to keep the dependencies light.
-
+Note that you will have to install `Octarine` and `NAVis` separately!
+This is intentional so that you can choose the install options
+(e.g. the Window manager) yourself.
 
 ## Usage
 
 The plugin will automatically be loaded alongside `Octarine` and extends the functionality by:
 
 1. Allowing to pass `navis.Neuron/Lists`, `navis.Volumes` and `skeletor.Skeletons` to the generic `Viewer.add()` method.
-2. Adding a dedicated `Viewer.add_neurons` method with
-   various specialized parameters that shadow the options in `navis.plot3d`.
+2. Adding a dedicated `Viewer.add_neurons` method with various specialized parameters that shadow the options in `navis.plot3d`.
 
 ```python
 import navis
