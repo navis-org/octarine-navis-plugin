@@ -28,7 +28,7 @@ def register_plugin():
     oc.register_converter(is_skeletor, skeletor2gfx)
 
     # Add a dedicated method to the viewer to add neurons
-    oc.Viewer.add_neuron = add_neurons
+    oc.Viewer.add_neurons = add_neurons
 
 
 @oc.viewer.update_viewer(legend=True, bounds=True)
