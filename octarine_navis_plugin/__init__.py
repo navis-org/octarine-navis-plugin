@@ -42,11 +42,19 @@ def add_neurons(
     palette=None,
     vmin=None,
     vmax=None,
+    smin=None,
+    smax=None,
+    norm_global=False,
     connectors=False,
+    connectors_only=False,
     cn_colors=None,
     cn_layout=None,
+    cn_size=None,
+    cn_alpha=None,
+    cn_mesh_colors=False,
     random_ids=False,
     linewidth=1,
+    linestyle='-',
     radius=False,
     soma=True,
     dps_scale_vec='auto',
@@ -71,8 +79,12 @@ def add_neurons(
                     Use these parameters to adjust the color palette:
                      - palette (str): Name of a color palette to use.
                      - vmin/vmax (float): Min and max values for the scale.
+                     - norm_global (bool): Whether to normalize the scale
+                       globally across all neurons.
     shade_by :      str, optional
                     Name of a property to use for shading the neurons.
+                    Use these parameters to adjust the shading:
+                     - smin/smax (float): Min and max values for the scale.
     connectors :    bool, optional
                     Whether to plot connectors. Use these parameters
                     to adjust the way connectors are plotted:
@@ -80,6 +92,12 @@ def add_neurons(
                        types to colors. E.g. {'pre': 'red', 'post': 'blue'}.
                      - `cn_layout` (str): Layout of the connectors. See
                        `navis.config.default_connector_colors` for options.
+                     - `cn_size` (float): Size of the connectors.
+                     - `cn_alpha` (float): Transparency of the connectors.
+                     - `cn_mesh_colors` (bool): Whether to color the connectors
+                       by the neuron's color.
+    connectors_only : bool
+                    Whether to plot only the connectors (but not the neuron itself).
     random_ids :    bool
                     Whether to use random UUIDs instead of neuron IDs.
                     This is useful if the neurons you are adding have
@@ -89,6 +107,8 @@ def add_neurons(
 
     linewidth :     float, optional
                     Width of the lines.
+    linestyle :     str, optional
+                    Style of the lines.
     radius :        float, optional
                     For skeletons only: whether to use the skeleton's radius
                     information to plot the neuron as a tube (mesh).
@@ -135,17 +155,23 @@ def add_neurons(
         alpha=alpha,
         connectors=connectors,
         cn_colors=cn_colors,
+        cn_alpha=cn_alpha,
+        cn_size=cn_size,
+        cn_mesh_colors=cn_mesh_colors,
         color_by=color_by,
         shade_by=shade_by,
         palette=palette,
         vmin=vmin,
         vmax=vmax,
+        smin=smin,
+        smax=smax,
         linewidth=linewidth,
         cn_layout=cn_layout,
         radius=radius,
         random_ids=random_ids,
         dps_scale_vec=dps_scale_vec,
-        soma=soma
+        soma=soma,
+        linestyle=linestyle
     )
 
     if clear:

@@ -61,6 +61,7 @@ def neuron2gfx(x, color=None, random_ids=False, **kwargs):
                         - vmin: float
                         - vmax: float
                         - linewidth: float
+                        - linestyle: str
                         - cn_layout: dict
                         - radius: bool
                         - center: bool
@@ -316,6 +317,7 @@ def skeleton2gfx(neuron, neuron_color, object_id, **kwargs):
         line = oc.visuals.lines2gfx(
             coords,
             linewidth=kwargs.get("linewidth", kwargs.get("lw", 2)),
+            dash_pattern=kwargs.get("linestyle", "-"),
             color=neuron_color,
         )
 
