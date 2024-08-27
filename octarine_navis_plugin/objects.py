@@ -185,7 +185,9 @@ def connectors2gfx(neuron, neuron_color, object_id, **kwargs):
     import navis
 
     cn_lay = navis.config.default_connector_colors.copy()
-    cn_lay.update(kwargs.get("cn_layout", {}))
+
+    if kwargs.get("cn_layout", None):
+        cn_lay.update(kwargs.get("cn_layout", {}))
 
     visuals = []
     cn_colors = kwargs.get("cn_colors", None)
