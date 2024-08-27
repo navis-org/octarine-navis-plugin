@@ -90,7 +90,7 @@ def add_neurons(
                     to adjust the way connectors are plotted:
                      - `cn_colors` (dict): A dictionary mapping connector
                        types to colors. E.g. {'pre': 'red', 'post': 'blue'}.
-                     - `cn_layout` (str): Layout of the connectors. See
+                     - `cn_layout` (dict): Layout of the connectors. See
                        `navis.config.default_connector_colors` for options.
                      - `cn_size` (float): Size of the connectors.
                      - `cn_alpha` (float): Transparency of the connectors.
