@@ -229,7 +229,7 @@ def connectors2gfx(neuron, neuron_color, object_id, **kwargs):
 
             # Create line plot from segments
             con = oc.visuals.lines2gfx(
-                linewidth=kwargs.get("linewidth", 1), color=color
+                coords, linewidth=kwargs.get("linewidth", 1), color=color
             )
         else:
             raise ValueError(f'Unknown connector display mode "{mode}"')
