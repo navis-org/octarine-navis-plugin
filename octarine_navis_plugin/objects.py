@@ -268,22 +268,23 @@ def mesh2gfx(neuron, neuron_color, object_id, **kwargs):
 
 def voxel2gfx(neuron, neuron_color, object_id, **kwargs):
     """Convert voxels (i.e. VoxelNeuron) to pygfx visuals."""
-    vol = oc.visuals.volume2gfx(
-        neuron,
+    vols = oc.visuals.volume2gfx(
+        neuron.grid,
         color=neuron_color,
         spacing=neuron.units_xyz.magnitude,
         offset=neuron.offset,
     )
 
     # Add custom attributes
-    vol._object_type = "neuron"
-    vol._neuron_part = "neurites"
-    vol._neuron_id = neuron.id
-    vol._name = str(getattr(neuron, "name", neuron.id))
-    vol._object_id = object_id
-    vol._object = neuron
+    for vol in vols:
+        vol._object_type = "neuron"
+        vol._neuron_part = "neurites"
+        vol._neuron_id = neuron.id
+        vol._name = str(getattr(neuron, "name", neuron.id))
+        vol._object_id = object_id
+        vol._object = neuron
 
-    return [vol]
+    return vols
 
 
 def skeleton2gfx(neuron, neuron_color, object_id, **kwargs):
