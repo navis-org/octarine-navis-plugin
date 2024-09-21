@@ -152,20 +152,22 @@ def neuron2gfx(x, color=None, random_ids=False, **kwargs):
         else:
             object_id = neuron.id  # this may also be a random ID
 
-        if isinstance(neuron, navis.TreeNeuron) and kwargs.get('radius', False) == "auto":
-            # Number of nodes with radii
-            n_radii = (neuron.nodes.get("radius", pd.Series([])).fillna(0) > 0).sum()
-            # If less than 30% of nodes have a radius, we will fall back to lines
-            if n_radii / neuron.nodes.shape[0] < 0.3:
-                kwargs['radius'] = False
+        if isinstance(neuron, navis.TreeNeuron):
+            if kwargs.get('radius', False) == "auto":
+                # Number of nodes with radii
+                n_radii = (neuron.nodes.get("radius", pd.Series([])).fillna(0) > 0).sum()
+                # If less than 30% of nodes have a radius, we will fall back to lines
+                if n_radii / neuron.nodes.shape[0] < 0.3:
+                    kwargs['radius'] = False
 
-            _neuron = navis.conversion.tree2meshneuron(neuron, warn_missing_radii=False)
-            _neuron.connectors = neuron.connectors
-            neuron = _neuron
+            if kwargs.get('radius', False):
+                _neuron = navis.conversion.tree2meshneuron(neuron, warn_missing_radii=False)
+                _neuron.connectors = neuron.connectors
+                neuron = _neuron
 
-            # See if we need to map colors to vertices
-            if isinstance(colormap[i], np.ndarray) and colormap[i].ndim == 2:
-                colormap[i] = colormap[i][neuron.vertex_map]
+                # See if we need to map colors to vertices
+                if isinstance(colormap[i], np.ndarray) and colormap[i].ndim == 2:
+                    colormap[i] = colormap[i][neuron.vertex_map]
 
         neuron_color = colormap[i]
         if not kwargs.get("connectors_only", False):
