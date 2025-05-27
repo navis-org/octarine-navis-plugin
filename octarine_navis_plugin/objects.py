@@ -390,7 +390,7 @@ def skeleton2gfx(neuron, neuron_color, object_id, **kwargs):
                     )
                     s = gfx.Mesh(
                         gfx.sphere_geometry(
-                            radius=r * 2, width_segments=16, height_segments=8
+                            radius=np.float32(r) * 2, width_segments=16, height_segments=8
                         ),
                         gfx.MeshPhongMaterial(color=soma_color),
                     )
