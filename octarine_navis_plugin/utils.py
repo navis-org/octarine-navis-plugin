@@ -12,6 +12,7 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 
+import numpy as np
 
 def is_navis(x):
     """Check if an object is a navis object."""
@@ -55,3 +56,57 @@ def is_skeletor(x):
         if b.__module__.startswith("skeletor") and b.__name__ == "Skeleton":
             return True
     return False
+
+def set_alpha(color, alpha):
+    """Set alpha channel for given color.
+
+    Will add alpha channel if not present.
+
+    Parameters
+    ----------
+    color : array-like, shape (..., 3) or (..., 4)
+            RGB or RGBA color values in range [0, 1].
+    alpha : float
+            Alpha value to set, in range [0, 1].
+
+    """
+    if isinstance(color, np.ndarray):
+        color = color.copy()
+        if color.ndim == 2:
+            if color.shape[1] == 3:
+                alpha_channel = np.full((color.shape[0], 1), alpha)
+                color = np.hstack((color, alpha_channel))
+            elif color.shape[1] == 4:
+                color[:, 3] = alpha
+            else:
+                raise ValueError("Color array must have shape (..., 3) or (..., 4).")
+        elif color.ndim == 1:
+            if color.shape[0] == 3:
+                color = np.append(color, alpha)
+            elif color.shape[0] == 4:
+                color[3] = alpha
+            else:
+                raise ValueError("Color array must have shape (..., 3) or (..., 4).")
+        else:
+            raise ValueError("Color array must have shape (..., 3) or (..., 4).")
+    elif isinstance(color, list):
+        color = color.copy()
+        if len(color) == 3:
+            color.append(alpha)
+        elif len(color) == 4:
+            color[3] = alpha
+        else:
+            raise ValueError("Color list must have length 3 or 4.")
+    elif isinstance(color, tuple):
+        if len(color) == 3:
+            color = list(color) + [alpha]
+        elif len(color) == 4:
+            color = list(color)
+            color[3] = alpha
+        else:
+            raise ValueError("Color tuple must have length 3 or 4.")
+        color = tuple(color)
+    else:
+        raise TypeError("Color must be a numpy array, list, or tuple.")
+
+    return color

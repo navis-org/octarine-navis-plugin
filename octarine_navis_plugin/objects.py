@@ -19,6 +19,8 @@ import pandas as pd
 import numpy as np
 import pygfx as gfx
 
+from .utils import set_alpha
+
 
 def volume2gfx(x, **kwargs):
     """Convert a single navis.Volume to a pygfx.Mesh."""
@@ -153,15 +155,19 @@ def neuron2gfx(x, color=None, random_ids=False, **kwargs):
             object_id = neuron.id  # this may also be a random ID
 
         if isinstance(neuron, navis.TreeNeuron):
-            if kwargs.get('radius', False) == "auto":
+            if kwargs.get("radius", False) == "auto":
                 # Number of nodes with radii
-                n_radii = (neuron.nodes.get("radius", pd.Series([])).fillna(0) > 0).sum()
+                n_radii = (
+                    neuron.nodes.get("radius", pd.Series([])).fillna(0) > 0
+                ).sum()
                 # If less than 30% of nodes have a radius, we will fall back to lines
                 if n_radii / neuron.nodes.shape[0] < 0.3:
-                    kwargs['radius'] = False
+                    kwargs["radius"] = False
 
-            if kwargs.get('radius', False):
-                _neuron = navis.conversion.tree2meshneuron(neuron, warn_missing_radii=False)
+            if kwargs.get("radius", False):
+                _neuron = navis.conversion.tree2meshneuron(
+                    neuron, warn_missing_radii=False
+                )
                 _neuron.connectors = neuron.connectors
                 neuron = _neuron
 
@@ -199,12 +205,16 @@ def connectors2gfx(neuron, neuron_color, object_id, **kwargs):
     if kwargs.get("cn_layout", None):
         cn_lay.update(kwargs.get("cn_layout", {}))
 
-    which_cn = kwargs.get('connectors', None)
+    for k in ("cn_size", "cn_alpha"):
+        if kwargs.get(k, None) is not None:
+            cn_lay[k.split("_")[1]] = kwargs.get(k)
+
+    which_cn = kwargs.get("connectors", None)
     if isinstance(which_cn, (list, np.ndarray, tuple)):
         connectors = neuron.connectors[neuron.connectors.type.isin(which_cn)]
-    elif which_cn == 'pre':
+    elif which_cn == "pre":
         connectors = neuron.presynapses
-    elif which_cn == 'post':
+    elif which_cn == "post":
         connectors = neuron.postsynapses
     elif isinstance(which_cn, str):
         connectors = neuron.connectors[neuron.connectors.type == which_cn]
@@ -213,17 +223,20 @@ def connectors2gfx(neuron, neuron_color, object_id, **kwargs):
 
     visuals = []
     cn_colors = kwargs.get("cn_colors", None)
-    for j, this_cn in connectors.groupby('type'):
-        if isinstance(cn_colors, dict):
-            color = cn_colors.get(j, cn_lay.get(j, {}).get("color", (0.1, 0.1, 0.1)))
-        elif cn_colors == "neuron":
+    for j, this_cn in connectors.groupby("type"):
+        if kwargs.get("cn_mesh_colors", False) or cn_colors == "neuron":
             color = neuron_color
+        elif isinstance(cn_colors, dict):
+            color = cn_colors.get(j, cn_lay.get(j, {}).get("color", (0.1, 0.1, 0.1)))
         elif cn_colors:
             color = cn_colors
         else:
             color = cn_lay.get(j, {}).get("color", (0.1, 0.1, 0.1))
 
         color = navis.plotting.colors.eval_color(color, color_range=1)
+
+        if cn_lay.get("alpha", None) is not None:
+            color = set_alpha(color, cn_lay["alpha"])
 
         pos = (
             this_cn[["x", "y", "z"]]
@@ -390,7 +403,9 @@ def skeleton2gfx(neuron, neuron_color, object_id, **kwargs):
                     )
                     s = gfx.Mesh(
                         gfx.sphere_geometry(
-                            radius=np.float32(r) * 2, width_segments=16, height_segments=8
+                            radius=np.float32(r) * 2,
+                            width_segments=16,
+                            height_segments=8,
                         ),
                         gfx.MeshPhongMaterial(color=soma_color),
                     )
