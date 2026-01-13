@@ -14,21 +14,26 @@
 
 import warnings
 
-import octarine as oc
-
-from .objects import neuron2gfx, skeletor2gfx
-from .utils import is_neuron, is_neuronlist, is_skeletor
-
-
+# Note: the register_plugin function is called by octarine. To avoid
+# circular imports, we need this function to (a) come first before
+# importing octarine itself and (b) import the necessary functions
+# inside the function.
 def register_plugin():
     """Register the navis converters with octarine."""
+    import octarine as oc
+
+    from .objects import neuron2gfx, skeletor2gfx
+    from .utils import is_neuron, is_neuronlist, is_skeletor
+
     # Register the neuron2gfx converter
     oc.register_converter(is_neuron, neuron2gfx)
     oc.register_converter(is_neuronlist, neuron2gfx)
     oc.register_converter(is_skeletor, skeletor2gfx)
 
-    # Add a dedicated method to the viewer to add neurons
-    oc.Viewer.add_neurons = add_neurons
+import octarine as oc
+
+from .objects import neuron2gfx, skeletor2gfx
+from .utils import is_neuron, is_neuronlist, is_skeletor
 
 
 @oc.viewer.update_viewer(legend=True, bounds=True)
@@ -185,3 +190,6 @@ def add_neurons(
 
     if center:
         self.center_camera()
+
+# Add a dedicated method to the viewer to add neurons
+oc.Viewer.add_neurons = add_neurons
