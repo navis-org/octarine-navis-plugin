@@ -403,7 +403,7 @@ def skeleton2gfx(neuron, neuron_color, object_id, **kwargs):
                     )
                     s = gfx.Mesh(
                         gfx.sphere_geometry(
-                            radius=np.float32(r) * 2,
+                            radius=np.float32(r),
                             width_segments=16,
                             height_segments=8,
                         ),
